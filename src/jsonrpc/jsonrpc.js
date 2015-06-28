@@ -15,7 +15,7 @@ goog.require('jsonrpc.JsonRpcIo');
 /**
  * @param {string} method
  * @param {Object=} opt_params
- * @return {Promise<Object>}
+ * @return {goog.Promise<Object>}
  */
 jsonrpc.call = function(method, opt_params) {
   return new goog.Promise(function(resolve, reject) {
