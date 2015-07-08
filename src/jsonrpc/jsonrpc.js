@@ -8,8 +8,13 @@
 goog.provide('jsonrpc');
 
 goog.require('goog.Promise');
-goog.require('jsonrpc.JsonRpcIo');
+goog.require('jsonrpc.JsonRpcIoTransport');
 
+
+/**
+ * @type {jsonrpc.Transport}
+ */
+jsonrpc.defaultTransport = new jsonrpc.JsonRpcIoTransport;
 
 
 /**
@@ -18,22 +23,7 @@ goog.require('jsonrpc.JsonRpcIo');
  * @return {goog.Promise<Object>}
  */
 jsonrpc.call = function(method, opt_params) {
-  return new goog.Promise(function(resolve, reject) {
-    var rpcIo = new jsonrpc.JsonRpcIo(method)
-    if (opt_params) {
-      rpcIo.setParameters(opt_params);
-    }
-    rpcIo.listen(
-        goog.net.EventType.COMPLETE,
-        function(e) {
-          if (e.result) {
-            resolve(e.result);
-          } else {
-            reject(e.error);
-          }
-        });
-    rpcIo.send();
-  })
+  return jsonrpc.defaultTransport.performCall(method, opt_params);
 };
 
 

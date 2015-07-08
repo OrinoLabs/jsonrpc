@@ -11,6 +11,7 @@
  */
 
 
+goog.provide('jsonrpc.JsonRpcIoTransport');
 goog.provide('jsonrpc.JsonRpcIo');
 
 goog.require('goog.events.EventTarget');
@@ -18,8 +19,38 @@ goog.require('goog.json');
 goog.require('goog.net.EventType')
 goog.require('goog.net.XhrIo');
 goog.require('goog.Uri');
+goog.require('jsonrpc.Transport');
 
 
+
+/**
+ * @extends {jsonrpc.Transport}
+ */
+jsonrpc.JsonRpcIoTransport = function() {};
+goog.inherits(jsonrpc.JsonRpcIoTransport, jsonrpc.Transport);
+
+
+/**
+ * @inheritDoc
+ */
+jsonrpc.JsonRpcIoTransport.prototype.performCall = function(method, opt_params) {
+  return new goog.Promise(function(resolve, reject) {
+    var rpcIo = new jsonrpc.JsonRpcIo(method)
+    if (opt_params) {
+      rpcIo.setParameters(opt_params);
+    }
+    rpcIo.listen(
+        goog.net.EventType.COMPLETE,
+        function(e) {
+          if (e.result) {
+            resolve(e.result);
+          } else {
+            reject(e.error);
+          }
+        });
+    rpcIo.send();
+  });
+};
 
 
 /**
