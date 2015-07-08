@@ -12,6 +12,7 @@
 
 
 goog.provide('jsonrpc.JsonRpcIoTransport');
+// TODO: Stop using this directly.
 goog.provide('jsonrpc.JsonRpcIo');
 
 goog.require('goog.events.EventTarget');
