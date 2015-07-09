@@ -18,10 +18,15 @@ jsonrpc.ngModule = (function() {
   return angular.module('jsonrpc', []);
 })();
 
-// Acquire the angular $http service.
-jsonrpc.ngModule.run(function($http) {
+
+/**
+ * Acquires the angular $http service.
+ * @ngInject
+ */
+jsonrpc.acquireHttpService = function($http) {
   jsonrpc.$http = $http;
-})
+}
+jsonrpc.ngModule.run(jsonrpc.acquireHttpService);
 
 
 /**
