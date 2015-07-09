@@ -6,19 +6,22 @@ goog.provide('jsonrpc.AngularTransport');
 goog.require('jsonrpc.Transport');
 
 
+// TODO:
+// - Error handling
 
-jsonrpc.ngModule = function() {
+
+
+jsonrpc.ngModule = (function() {
   if (typeof angular == 'undefined') {
     throw new Error('Angular library is not present.');
   }
   return angular.module('jsonrpc', []);
-}();
+})();
 
-
+// Acquire the angular $http service.
 jsonrpc.ngModule.run(function($http) {
   jsonrpc.$http = $http;
 })
-
 
 
 /**

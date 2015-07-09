@@ -2,6 +2,10 @@
 
 /**
  * @fileoverview Provides the jsonrpc package.
+ *
+ * TODO:
+ * - Call options
+ * - Endpoint configuration (path is currently hardcoded to /jsonrpc in transports)
  */
 
 
