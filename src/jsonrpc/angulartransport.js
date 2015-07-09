@@ -25,7 +25,8 @@ jsonrpc.ngModule.run(function($http) {
 
 
 /**
- * @extends {jsonrpc.Transport}
+ * @constructor
+ * @implements {jsonrpc.Transport}
  */
 jsonrpc.AngularTransport = function() {};
 goog.inherits(jsonrpc.AngularTransport, jsonrpc.Transport);

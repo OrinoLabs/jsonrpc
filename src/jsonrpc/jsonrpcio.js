@@ -25,10 +25,10 @@ goog.require('jsonrpc.Transport');
 
 
 /**
- * @extends {jsonrpc.Transport}
+ * @constructor
+ * @implements {jsonrpc.Transport}
  */
 jsonrpc.JsonRpcIoTransport = function() {};
-goog.inherits(jsonrpc.JsonRpcIoTransport, jsonrpc.Transport);
 
 
 /**
