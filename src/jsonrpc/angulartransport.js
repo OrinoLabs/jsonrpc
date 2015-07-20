@@ -24,9 +24,14 @@ jsonrpc.ngModule = (function() {
  * @ngInject
  */
 jsonrpc.acquireHttpService = function($http) {
-  jsonrpc.$http = $http;
+  /**
+   * The angular http service.
+   * @private
+   */
+  jsonrpc.$http_ = $http;
 }
 jsonrpc.ngModule.run(jsonrpc.acquireHttpService);
+
 
 
 /**
@@ -34,7 +39,6 @@ jsonrpc.ngModule.run(jsonrpc.acquireHttpService);
  * @implements {jsonrpc.Transport}
  */
 jsonrpc.AngularTransport = function() {};
-goog.inherits(jsonrpc.AngularTransport, jsonrpc.Transport);
 
 
 /**
@@ -45,7 +49,7 @@ jsonrpc.AngularTransport.prototype.performCall = function(method, opt_params) {
     method: method,
     params: opt_params || {}
   }
-  return jsonrpc.$http({
+  return jsonrpc.$http_({
     method: 'POST',
     url: '/jsonrpc',
     data: JSON.stringify(payload)

@@ -20,6 +20,7 @@ goog.require('goog.json');
 goog.require('goog.net.EventType')
 goog.require('goog.net.XhrIo');
 goog.require('goog.Uri');
+goog.require('jsonrpc.Error');
 goog.require('jsonrpc.Transport');
 
 
@@ -231,13 +232,13 @@ jsonrpc.JsonRpcIo.prototype.handleCompletion_ = function() {
     return;
   }
 
-  var e = {type: goog.net.EventType.COMPLETE};
+  var evt = {type: goog.net.EventType.COMPLETE};
   try {
-    e.response = this.xhrIo_.getResponseJson();
+    evt.response = this.xhrIo_.getResponseJson();
   } catch (e) {
-    e.error = new jsonrpc.Error(jsonrpc.ErrorCode.PARSE_ERROR);
+    evt.error = new jsonrpc.Error(jsonrpc.ErrorCode.PARSE_ERROR);
   }
-  this.dispatchEvent(e);
+  this.dispatchEvent(evt);
 };
 
 
@@ -249,7 +250,7 @@ jsonrpc.JsonRpcIo.prototype.handleError_ = function() {
   this.dispatchEvent({
       type: goog.net.EventType.COMPLETE,
       error: new jsonrpc.Error(
-          jsonrpc.ErrorCode.TRANSPORT_ERORR, undefined, this.xhrIo_.getLastError()),
+          jsonrpc.ErrorCode.TRANSPORT_ERROR, undefined, this.xhrIo_.getLastError()),
     });
 };
 

@@ -1,4 +1,9 @@
+// Copyright 2015 Michael Bürge <mib@orino.ch>
+// All rights reserved.
 
+
+goog.provide('jsonrpc.ErrorCode');
+goog.provide('jsonrpc.Error');
 
 
 
@@ -35,7 +40,7 @@ jsonrpc.errorMessages = (function() {
 /**
  * @param {number} code
  * @param {string=} opt_msg
- * @param {*} opt_data
+ * @param {*=} opt_data
  * @constructor
  */
 jsonrpc.Error = function(code, opt_msg, opt_data) {
@@ -54,7 +59,7 @@ jsonrpc.Error = function(code, opt_msg, opt_data) {
  * @param {Object} jsonError
  * @return {jsonrpc.Error}
  */
-jsonrpc.fromJSON = function(jsonError) {
+jsonrpc.Error.fromJson = function(jsonError) {
   return new jsonrpc.Error(jsonError['code'], jsonError['message'], jsonError['data']);
 };
 
