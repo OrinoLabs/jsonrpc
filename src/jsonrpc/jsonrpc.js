@@ -12,13 +12,13 @@
 goog.provide('jsonrpc');
 
 goog.require('goog.Promise');
-goog.require('jsonrpc.JsonRpcIoTransport');
+goog.require('jsonrpc.XhrIoTransport');
 
 
 /**
  * @type {jsonrpc.Transport}
  */
-jsonrpc.defaultTransport = new jsonrpc.JsonRpcIoTransport;
+jsonrpc.defaultTransport = new jsonrpc.XhrIoTransport;
 
 
 /**
@@ -27,7 +27,21 @@ jsonrpc.defaultTransport = new jsonrpc.JsonRpcIoTransport;
  * @return {goog.Promise<Object>}
  */
 jsonrpc.call = function(method, opt_params) {
-  return jsonrpc.defaultTransport.performCall(method, opt_params);
+  return new goog.Promise(function(resolve, reject) {
+    jsonrpc.defaultTransport.performCall(method, opt_params)
+    .then(function(responseJson) {
+      var result = responseJson['result'];
+      var error = responseJson['error']
+      if (result) {
+        resolve(result);
+      } else {
+        reject(jsonrpc.Error.fromJson(error));
+      }
+    })
+    .thenFail(function(error) {
+      reject(error);
+    });
+  });
 };
 
 
