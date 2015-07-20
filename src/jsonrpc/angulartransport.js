@@ -47,10 +47,11 @@ jsonrpc.AngularTransport.prototype.performCall = function(method, opt_params) {
   })
   .then(function(httpPromise) {
     var response = httpPromise.data;
-    if (response['result']) {
-      return response['result'];
+    if (!goog.isObject(response)) {
+      return goog.Promise.reject(
+          new jsonrpc.Error(jsonrpc.ErrorCode.TRANSPORT_ERROR));
     } else {
-      throw new Error('NO GOOD!');
+      return response;
     }
   });
 };

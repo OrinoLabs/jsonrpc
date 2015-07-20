@@ -43,8 +43,8 @@ jsonrpc.XhrIoTransport.prototype.performCall = function(method, opt_params) {
     rpcIo.listen(
         goog.net.EventType.COMPLETE,
         function(e) {
-          if (e.result) {
-            resolve(e.result);
+          if (e.response) {
+            resolve(e.response);
           } else {
             reject(e.error);
           }
@@ -223,6 +223,7 @@ jsonrpc.JsonRpcIo.prototype.send = function() {
 
 /**
  * Handles completion events from the XhrIo instance.
+ * @private
  */
 jsonrpc.JsonRpcIo.prototype.handleCompletion_ = function() {
   // A COMPLETE event is stil fired even if an error occurred.
@@ -230,48 +231,25 @@ jsonrpc.JsonRpcIo.prototype.handleCompletion_ = function() {
     return;
   }
 
+  var e = {type: goog.net.EventType.COMPLETE};
   try {
-    var response = this.xhrIo_.getResponseJson();
+    e.response = this.xhrIo_.getResponseJson();
   } catch (e) {
-    this.dispatchEvent({
-        type: jsonrpc.JsonRpcIo.CompletionStatus.APPLICATION_ERROR,
-        error: 'Invalid JSON.',
-        jsonRpcIo: this
-      });
-    return;
+    e.error = new jsonrpc.Error(jsonrpc.ErrorCode.PARSE_ERROR);
   }
-
-  var e = {
-    type: goog.net.EventType.COMPLETE
-  };
-
-  var result = response['result'];
-  var error = response['error'];
-
-  if (goog.isDef(result)) {
-    e.status = jsonrpc.JsonRpcIo.CompletionStatus.OK;
-    e.result = result;
-
-  } else {
-    if (!error) {
-      error = 'Unspecified error.'
-    }
-    e.status = jsonrpc.JsonRpcIo.CompletionStatus.APPLICATION_ERROR;
-    e.error = error;
-  }
-
   this.dispatchEvent(e);
 };
 
 
 /**
  * Handles error events from the XhrIo instance.
+ * @private
  */
 jsonrpc.JsonRpcIo.prototype.handleError_ = function() {
   this.dispatchEvent({
       type: goog.net.EventType.COMPLETE,
-      status: jsonrpc.JsonRpcIo.CompletionStatus.XHRIO_ERROR,
-      error: 'XhrIo error: ' + this.xhrIo_.getLastError()
+      error: new jsonrpc.Error(
+          jsonrpc.ErrorCode.TRANSPORT_ERORR, undefined, this.xhrIo_.getLastError()),
     });
 };
 
