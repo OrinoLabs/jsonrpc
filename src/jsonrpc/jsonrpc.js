@@ -38,7 +38,7 @@ jsonrpc.call = function(method, opt_params) {
         reject(jsonrpc.Error.fromJson(error));
       }
     })
-    .thenFail(function(error) {
+    .then(undefined, function(error) {
       reject(error);
     });
   });
