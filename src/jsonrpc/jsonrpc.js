@@ -12,6 +12,7 @@
 goog.provide('jsonrpc');
 
 goog.require('goog.Promise');
+goog.require('jsonrpc.Error');
 goog.require('jsonrpc.XhrIoTransport');
 
 
@@ -34,8 +35,16 @@ jsonrpc.call = function(method, opt_params) {
       var error = responseJson['error']
       if (result) {
         resolve(result);
+      } else if (error) {
+        // Allow strings as errors. This is slightly more permissive than the
+        // JSONRPC specification, which mandates an error object.
+        if (goog.isString(error)) {
+          reject(new jsonrpc.Error(jsonrpc.ErrorCode.APPLICATION_ERROR, error));
+        } else {
+          reject(jsonrpc.Error.fromJson(error));
+        }
       } else {
-        reject(jsonrpc.Error.fromJson(error));
+        reject(new jsonrpc.Error(jsonrpc.ErrorCode.INTERNAL_ERROR));
       }
     })
     .then(undefined, function(error) {

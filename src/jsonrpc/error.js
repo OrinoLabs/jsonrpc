@@ -18,6 +18,8 @@ jsonrpc.ErrorCode = {
   INVALID_PARAMS: -32602,
   INTERNAL_ERROR: -32603,
   TRANSPORT_ERROR: -32300,
+
+  APPLICATION_ERROR: -32000,
 };
 
 
@@ -31,7 +33,8 @@ jsonrpc.errorMessages = (function() {
   o[jsonrpc.ErrorCode.METHOD_NOT_FOUND] = 'Method not found.';
   o[jsonrpc.ErrorCode.INVALID_PARAMS] = 'Invalid params.';
   o[jsonrpc.ErrorCode.INTERNAL_ERROR] = 'Internal error.';
-  o[jsonrpc.ErrorCode.TRANSPORT_ERROR] = 'Transport error';
+  o[jsonrpc.ErrorCode.TRANSPORT_ERROR] = 'Transport error.';
+  o[jsonrpc.ErrorCode.APPLICATION_ERROR] = 'Application error.';
   return o;
 })();
 
@@ -48,7 +51,7 @@ jsonrpc.Error = function(code, opt_msg, opt_data) {
   this.code = code;
 
   /** @type {(string|undefined)} */
-  this.msg = opt_msg || jsonrpc.errorMessages[code];
+  this.message = opt_msg || jsonrpc.errorMessages[code];
 
   /** @type {*} */
   this.data = opt_data;
