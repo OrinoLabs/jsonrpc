@@ -12,13 +12,13 @@
 goog.provide('jsonrpc');
 
 goog.require('goog.Promise');
-goog.require('jsonrpc.JsonRpcIoTransport');
+goog.require('jsonrpc.XhrIoTransport');
 
 
 /**
  * @type {jsonrpc.Transport}
  */
-jsonrpc.defaultTransport = new jsonrpc.JsonRpcIoTransport;
+jsonrpc.defaultTransport = new jsonrpc.XhrIoTransport;
 
 
 /**

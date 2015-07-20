@@ -11,7 +11,7 @@
  */
 
 
-goog.provide('jsonrpc.JsonRpcIoTransport');
+goog.provide('jsonrpc.XhrIoTransport');
 // TODO: Stop using this directly.
 goog.provide('jsonrpc.JsonRpcIo');
 
@@ -28,13 +28,13 @@ goog.require('jsonrpc.Transport');
  * @constructor
  * @implements {jsonrpc.Transport}
  */
-jsonrpc.JsonRpcIoTransport = function() {};
+jsonrpc.XhrIoTransport = function() {};
 
 
 /**
  * @inheritDoc
  */
-jsonrpc.JsonRpcIoTransport.prototype.performCall = function(method, opt_params) {
+jsonrpc.XhrIoTransport.prototype.performCall = function(method, opt_params) {
   return new goog.Promise(function(resolve, reject) {
     var rpcIo = new jsonrpc.JsonRpcIo(method)
     if (opt_params) {
