@@ -6,10 +6,6 @@ goog.provide('jsonrpc.AngularTransport');
 goog.require('jsonrpc.Transport');
 
 
-// TODO:
-// - Error handling
-
-
 
 jsonrpc.ngModule = (function() {
   if (typeof angular == 'undefined') {
@@ -21,16 +17,17 @@ jsonrpc.ngModule = (function() {
 
 /**
  * Acquires the angular $http service.
+ * @private
  * @ngInject
  */
-jsonrpc.acquireHttpService = function($http) {
+jsonrpc.acquireHttpService_ = function($http) {
   /**
    * The angular http service.
    * @private
    */
   jsonrpc.$http_ = $http;
 }
-jsonrpc.ngModule.run(jsonrpc.acquireHttpService);
+jsonrpc.ngModule.run(jsonrpc.acquireHttpService_);
 
 
 
@@ -55,6 +52,8 @@ jsonrpc.AngularTransport.prototype.performCall = function(method, opt_params) {
     data: JSON.stringify(payload)
   })
   .then(function(httpPromise) {
+    // NOTE: Response needs to specify correct content type (application/json) 
+    // in order for Angular to automatically parse the result.
     var response = httpPromise.data;
     if (!goog.isObject(response)) {
       return goog.Promise.reject(

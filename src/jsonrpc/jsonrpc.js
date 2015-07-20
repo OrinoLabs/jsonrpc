@@ -6,6 +6,7 @@
  * TODO:
  * - Call options
  * - Endpoint configuration (path is currently hardcoded to /jsonrpc in transports)
+ * - Retries.
  */
 
 
