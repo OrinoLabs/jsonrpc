@@ -39,7 +39,7 @@ jsonrpc.defaultTransport;
  */
 jsonrpc.call = function(method, opt_params, opt_opts) {
   var opts = opt_opts || {};
-  console.log(opts)
+
   var transport = jsonrpc.defaultTransport;
   if (!transport) {
     throw new Error('No transport specified.');
