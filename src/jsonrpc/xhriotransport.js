@@ -26,18 +26,30 @@ goog.require('jsonrpc.Transport');
 
 
 /**
+ * @param {string} opt_endpointPath
  * @constructor
  * @implements {jsonrpc.Transport}
  */
-jsonrpc.XhrIoTransport = function() {};
+jsonrpc.XhrIoTransport = function(opt_endpointPath) {
+  if (opt_endpointPath) {
+    this.endpointPath = opt_endpointPath;
+  }
+};
+
+
+/**
+ * @type {string}
+ */
+jsonrpc.XhrIoTransport.prototype.endpointPath = '/jsonrpc';
 
 
 /**
  * @inheritDoc
  */
 jsonrpc.XhrIoTransport.prototype.performCall = function(method, opt_params) {
+  var endpointPath = this.endpointPath;
   return new goog.Promise(function(resolve, reject) {
-    var rpcIo = new jsonrpc.JsonRpcIo(method)
+    var rpcIo = new jsonrpc.JsonRpcIo(method, endpointPath);
     if (opt_params) {
       rpcIo.setParameters(opt_params);
     }
@@ -57,10 +69,11 @@ jsonrpc.XhrIoTransport.prototype.performCall = function(method, opt_params) {
 
 /**
  * @param {string} methodName The JSON-RPC method name.
+ * @param {string} path
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-jsonrpc.JsonRpcIo = function(methodName) {
+jsonrpc.JsonRpcIo = function(methodName, path) {
   goog.events.EventTarget.call(this);
 
   /**
@@ -74,6 +87,12 @@ jsonrpc.JsonRpcIo = function(methodName) {
    * @protected
    */
   this.params_ = {};
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.path_ = path;
 };
 goog.inherits(jsonrpc.JsonRpcIo, goog.events.EventTarget);
 
@@ -86,13 +105,6 @@ jsonrpc.JsonRpcIo.CompletionStatus = {
   APPLICATION_ERROR: 2,
   XHRIO_ERROR: 3
 };
-
-
-/**
- * The default path.
- * @type {string}
- */
-jsonrpc.JsonRpcIo.DEFAULT_PATH = '/jsonrpc';
 
 
 /**
@@ -155,7 +167,7 @@ jsonrpc.JsonRpcIo.prototype.setParameters = function(params) {
  * @private
  */
 jsonrpc.JsonRpcIo.prototype.buildUri_ = function() {
-  var uri = new goog.Uri(jsonrpc.JsonRpcIo.DEFAULT_PATH);
+  var uri = new goog.Uri(this.path_);
 
   uri.setParameterValue('method', this.methodName_);
 
@@ -184,10 +196,10 @@ jsonrpc.JsonRpcIo.prototype.buildBody_ = function() {
     return undefined;
 
   } else if (this.httpMethod == 'POST') {
-    var formData = new FormData;
-    formData.append('method', this.methodName_);
-    formData.append('params', goog.json.serialize(this.params_));
-    return formData;
+    return goog.json.serialize({
+      'method': this.methodName_,
+      'params': this.params_
+    });
   }
 };
 
@@ -197,6 +209,9 @@ jsonrpc.JsonRpcIo.prototype.buildBody_ = function() {
  */
 jsonrpc.JsonRpcIo.prototype.getHeaders_ = function() {
   var headers = {};
+  if (this.httpMethod == 'POST') {
+    headers['Content-Type'] = 'application/json';
+  }
   return headers;
 }
 
