@@ -19,7 +19,7 @@ goog.require('jsonrpc.Error');
 /**
  * @typedef {{
  *   maxAttempts: number,
- *   shouldRetry: function(jsonrpc.Error):boolean,
+ *   shouldRetry: function(jsonrpc.Error):boolean
  * }}
  */
 jsonrpc.CallOptions;
