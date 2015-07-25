@@ -51,20 +51,19 @@ jsonrpc.AngularTransport.prototype.performCall = function(method, opt_params) {
     url: '/jsonrpc',
     data: JSON.stringify(payload)
   })
-  .then(function(httpPromise) {
-    // NOTE: Response needs to specify correct content type (application/json) 
-    // in order for Angular to automatically parse the result.
-    var response = httpPromise.data;
-    if (!goog.isObject(response)) {
-      return goog.Promise.reject(
-          new jsonrpc.Error(jsonrpc.ErrorCode.TRANSPORT_ERROR));
-    } else {
-      return response;
-    }
-  });
+  .then(
+    function(httpPromise) {
+      // NOTE: Response needs to specify correct content type (application/json) 
+      // in order for Angular to automatically parse the result.
+      var response = httpPromise.data;
+      if (!goog.isObject(response)) {
+        return goog.Promise.reject(
+            new jsonrpc.Error(jsonrpc.ErrorCode.TRANSPORT_ERROR));
+      } else {
+        return response;
+      }
+    });
+  // TODO: Catch http errors, throw transport error.
 };
-
-
-
 
 
