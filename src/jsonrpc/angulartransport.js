@@ -6,6 +6,14 @@ goog.provide('jsonrpc.AngularTransport');
 goog.require('jsonrpc.Transport');
 
 
+// NOTE/TODO:
+// The main motivation (besides reducing JS size) for jsonrpc.AngularTransport
+// was to integrate with the Angular digest loop to avoid having to call
+// $scope.$apply() after requests complete.
+// The current form doens't achieve this for some reason, despite the fact that
+// the use of Angular's http service was expected to achieve this.
+
+
 
 jsonrpc.ngModule = (function() {
   if (typeof angular == 'undefined') {
