@@ -34,6 +34,7 @@ jsonrpc.expressjs.createHandler = function(dispatcher, opt_logError) {
      */
     function replyWithError(error) {
       sendResponse({'error': error});
+      opt_logError && opt_logError(httpRequest, httpResponse, error);
     }
 
     var requestData = httpRequest.body;

@@ -60,7 +60,7 @@ jsonrpc.Dispatcher.prototype.dispatchCall = function(methodName, params) {
     }
 
     if (!handler) {
-      console.log('No handler for method: ' + methodName);
+      console.log('[jsonrpc] No handler for method: ' + methodName);
       reject(new jsonrpc.Error(
           jsonrpc.ErrorCode.METHOD_NOT_FOUND, null, methodName));
       return;
@@ -69,6 +69,7 @@ jsonrpc.Dispatcher.prototype.dispatchCall = function(methodName, params) {
     try {
       var handlerReturnValue = handler(params);
     } catch (err) {
+      console.log('[jsonrpc] ERROR: Exception caught executing handler: ', err);
       reject(new jsonrpc.Error(
           jsonrpc.ErrorCode.INTERNAL_ERROR, null, err));
     }
@@ -83,7 +84,6 @@ jsonrpc.Dispatcher.prototype.dispatchCall = function(methodName, params) {
     resultPromise
     .then(resolve)
     .then(null, function(err) {
-      console.log('resultPromise rejected: ', err);
       if (err instanceof jsonrpc.Error) {
         reject(err);
       } else {
