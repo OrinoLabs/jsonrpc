@@ -1,12 +1,10 @@
-// Copyright 2015 Michael Bürge. All rights reserved.
-
+// Copyright 2015 Michael Bürge <mib@orino.ch>
+// All rights reserved.
 /**
  * @fileoverview Provides the jsonrpc package.
  *
  * TODO:
- * - Call options
  * - Endpoint configuration (path is currently hardcoded to /jsonrpc in transports)
- * - Retries.
  */
 
 
@@ -18,6 +16,17 @@ goog.require('jsonrpc.Error');
 
 /**
  * @typedef {{
+ *   host: string,
+ *   port: (number|undefined),
+ *   path: (string|undefined)
+ * }}
+ */
+jsonrpc.Endpoint;
+
+
+/**
+ * @typedef {{
+ *   endpoint: jsonrpc.Endpoint
  *   maxAttempts: number,
  *   shouldRetry: function(jsonrpc.Error):boolean
  * }}
@@ -29,6 +38,23 @@ jsonrpc.CallOptions;
  * @type {jsonrpc.Transport}
  */
 jsonrpc.defaultTransport;
+
+
+/**
+ * @type {jsonrpc.Endpoint}
+ */
+jsonrpc.defaultEndpoint = {
+  host: undefined,
+  port: undefined,
+  path: '/jsonrpc'
+};
+
+
+/**
+ * The default call timeout (in milliseconds).
+ * @type {number}
+ */
+jsonrpc.defaultCallTimeout = 10000;
 
 
 /**
@@ -52,7 +78,7 @@ jsonrpc.call = function(method, opt_params, opt_opts) {
     function attemptCall() {
       attempt += 1;
 
-      jsonrpc.performCall_(transport, method, opt_params)
+      jsonrpc.performCall_(transport, method, opt_params, opt_opts)
       .then(function(result) {
         resolve(result);
       })
@@ -76,15 +102,18 @@ jsonrpc.call = function(method, opt_params, opt_opts) {
  * @param {jsonrpc.Transport} transport
  * @param {string} method
  * @param {Object=} opt_params
+ * @param {jsonrpc.CallOptions} opt_opts
+ * @return {!goog.Promise}
  */
-jsonrpc.performCall_ = function(transport, method, opt_params) {
+jsonrpc.performCall_ = function(transport, method, opt_params, opt_opts) {
   return new goog.Promise(function(resolve, reject) {
-    transport.performCall(method, opt_params)
+    transport.performCall(method, opt_params, opt_opts)
     .then(function(responseJson) {
       var result = responseJson['result'];
-      var error = responseJson['error']
+      var error = responseJson['error'];
       if (result) {
         resolve(result);
+
       } else if (error) {
         // Allow strings as errors. This is slightly more permissive than the
         // JSONRPC specification, which mandates an error object.
@@ -97,7 +126,7 @@ jsonrpc.performCall_ = function(transport, method, opt_params) {
         reject(new jsonrpc.Error(jsonrpc.ErrorCode.INTERNAL_ERROR));
       }
     })
-    .then(undefined, function(error) {
+    .then(null, function(error) {
       reject(error);
     });
   });
