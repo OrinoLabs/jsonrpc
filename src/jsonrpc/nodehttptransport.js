@@ -67,6 +67,10 @@ jsonrpc.NodeHttpTransport.prototype.performCall = function(method, opt_params, o
       reject(new jsonrpc.Error(jsonrpc.ErrorCode.TRANSPORT_ERROR, null, err));
     });
 
+    httpRequest.setTimeout(jsonrpc.defaultCallTimeout, function() {
+      httpRequest.abort();
+    });
+
     httpRequest.write(payload);
     httpRequest.end();
   });
