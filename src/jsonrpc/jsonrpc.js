@@ -26,7 +26,7 @@ jsonrpc.Endpoint;
 
 /**
  * @typedef {{
- *   endpoint: jsonrpc.Endpoint
+ *   endpoint: jsonrpc.Endpoint,
  *   maxAttempts: number,
  *   shouldRetry: function(jsonrpc.Error):boolean
  * }}
