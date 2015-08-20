@@ -6,6 +6,7 @@ goog.provide('jsonrpc.XdmHandler');
 /**
  * @param {xdm.Link} link
  * @param {string} port
+ * @constructor
  */
 jsonrpc.XdmHandler = function(link, port) {
   /**
@@ -36,10 +37,10 @@ jsonrpc.XdmHandler.prototype.handleMessage_ = function(msg) {
 
   jsonrpc.call(method, params, opts)
   .then(function(result) {
-    this.link_.send({'id': callId, 'result': result});
+    this.link_.send(this.port_, {'id': callId, 'result': result});
   }.bind(this))
   .then(null, function(err) {
-    this.link_.send({'id': callId, 'error': err});
+    this.link_.send(this.port_, {'id': callId, 'error': err});
   }.bind(this));
 };
 
