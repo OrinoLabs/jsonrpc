@@ -26,9 +26,10 @@ jsonrpc.Endpoint;
 
 /**
  * @typedef {{
- *   endpoint: jsonrpc.Endpoint,
- *   maxAttempts: number,
- *   shouldRetry: function(jsonrpc.Error):boolean
+ *   endpoint: (undefined|jsonrpc.Endpoint),
+ *   maxAttempts: (undefined|number),
+ *   shouldRetry: (undefined|function(jsonrpc.Error):boolean),
+ *   callId: (undefined|string)
  * }}
  */
 jsonrpc.CallOptions;
@@ -99,6 +100,19 @@ jsonrpc.call = function(method, opt_params, opt_opts) {
 
 
 /**
+ * Generates a call id.
+ * @return {string}
+ */
+jsonrpc.generateCallId = (function() {
+  var prefix = Math.floor(Math.random() * Math.pow(36, 4)).toString(36) + '-';
+  var counter = 0;
+  return function() {
+    return prefix + (counter++).toString(36);
+  };
+})();
+
+
+/**
  * @param {jsonrpc.Transport} transport
  * @param {string} method
  * @param {Object=} opt_params
@@ -107,7 +121,8 @@ jsonrpc.call = function(method, opt_params, opt_opts) {
  */
 jsonrpc.performCall_ = function(transport, method, opt_params, opt_opts) {
   return new goog.Promise(function(resolve, reject) {
-    transport.performCall(method, opt_params, opt_opts)
+    var callId = (opt_opts && opt_opts.callId) || jsonrpc.generateCallId();
+    transport.performCall(callId, method, opt_params, opt_opts)
     .then(function(responseJson) {
       var result = responseJson['result'];
       var error = responseJson['error'];

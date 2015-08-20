@@ -22,7 +22,8 @@ jsonrpc.NodeHttpTransport = function() {};
 /**
  * @inheritDoc
  */
-jsonrpc.NodeHttpTransport.prototype.performCall = function(method, opt_params, opt_opts) {
+jsonrpc.NodeHttpTransport.prototype.performCall = function(
+    callId, method, opt_params, opt_opts) {
   var opts = opt_opts || {};
 
   var payloadData = {

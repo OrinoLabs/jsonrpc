@@ -46,7 +46,8 @@ jsonrpc.XhrIoTransport.prototype.endpointPath = '/jsonrpc';
 /**
  * @inheritDoc
  */
-jsonrpc.XhrIoTransport.prototype.performCall = function(method, opt_params) {
+jsonrpc.XhrIoTransport.prototype.performCall = function(
+    callId, method, opt_params, opt_opts) {
   var endpointPath = this.endpointPath;
   return new goog.Promise(function(resolve, reject) {
     var rpcIo = new jsonrpc.JsonRpcIo(method, endpointPath);

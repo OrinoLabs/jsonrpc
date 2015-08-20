@@ -35,7 +35,8 @@ jsonrpc.JqueryTransport.prototype.endpointPath = '/jsonrpc';
 /**
  * @inheritDoc
  */
-jsonrpc.JqueryTransport.prototype.performCall = function(method, opt_params) {
+jsonrpc.JqueryTransport.prototype.performCall = function(
+    callId, method, opt_params, opt_opts) {
   var reqOpts = {
     url: this.endpointPath,
     type: 'POST',

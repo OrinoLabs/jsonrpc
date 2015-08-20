@@ -12,6 +12,7 @@ jsonrpc.Transport = function() {};
 
 
 /**
+ * @param {string} callId
  * @param {string} method
  * @param {Object=} opt_params
  * @param {jsonrpc.CallOptions} opt_opts
