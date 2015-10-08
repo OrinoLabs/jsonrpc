@@ -16,7 +16,7 @@ goog.require('jsonrpc.Error');
 
 /**
  * @typedef {{
- *   host: string,
+ *   host: (string|undefined),
  *   port: (number|undefined),
  *   path: (string|undefined)
  * }}
@@ -84,6 +84,7 @@ jsonrpc.call = function(method, opt_params, opt_opts) {
         resolve(result);
       })
       .then(null, function(err) {
+        err = /** @type {jsonrpc.Error} */(err);
         if (attempt == maxAttempts) {
           reject(err);
         } else if (opts.shouldRetry && !opts.shouldRetry(err)) {
@@ -116,7 +117,7 @@ jsonrpc.generateCallId = (function() {
  * @param {jsonrpc.Transport} transport
  * @param {string} method
  * @param {Object=} opt_params
- * @param {jsonrpc.CallOptions} opt_opts
+ * @param {jsonrpc.CallOptions=} opt_opts
  * @return {!goog.Promise}
  */
 jsonrpc.performCall_ = function(transport, method, opt_params, opt_opts) {

@@ -5,6 +5,7 @@
 goog.provide('jsonrpc.XdmTransport');
 
 goog.require('goog.log');
+goog.require('jsonrpc.Transport');
 
 
 /**
@@ -61,21 +62,27 @@ jsonrpc.XdmTransport.prototype.performCall = function(
     'params': opt_params,
     'opts': opt_opts
   };
-  return new goog.Promise(function(resolve, reject) {
+  return /** @type {goog.Promise<!Object>} */(
+    new goog.Promise(function(resolve, reject) {
       this.pending_[callId] = {
         resolve: resolve,
         reject: reject
       };
       this.link_.send(this.port_, msg);
-    }.bind(this));
+    }.bind(this))
+  );
 };
 
 
 /**
- * @param {Object} response
+ * @param {*} response
  * @private
  */
 jsonrpc.XdmTransport.prototype.handleMessage_ = function(response) {
+  if (!goog.isObject(response)) {
+    this.logger.severe('Received message is not an object.');
+    return;
+  }
   var callId = response['id'];
   var pending = this.pending_[callId];
   if (pending) {
