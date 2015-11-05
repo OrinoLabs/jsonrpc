@@ -19,7 +19,7 @@ jsonrpc.expressjs.createHandler = function(dispatcher, opt_logError) {
   var handlerFunction = function(httpRequest, httpResponse) {
 
     function sendResponse(jsonrpcResponse) {
-      httpResponse.setHeader('Content-Type', 'application/json; harset=utf-8');
+      httpResponse.setHeader('Content-Type', 'application/json; charset=utf-8');
       httpResponse.write(JSON.stringify(jsonrpcResponse));
       httpResponse.end();
     }
