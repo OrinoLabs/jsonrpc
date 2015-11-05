@@ -210,7 +210,7 @@ jsonrpc.JsonRpcIo.prototype.buildBody_ = function() {
 jsonrpc.JsonRpcIo.prototype.getHeaders_ = function() {
   var headers = {};
   if (this.httpMethod == 'POST') {
-    headers['Content-Type'] = 'application/json';
+    headers['Content-Type'] = 'application/json; charset=utf-8';
   }
   return headers;
 }

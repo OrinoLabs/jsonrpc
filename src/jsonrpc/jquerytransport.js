@@ -39,7 +39,7 @@ jsonrpc.JqueryTransport.prototype.performCall = function(method, opt_params) {
   var reqOpts = {
     url: this.endpointPath,
     type: 'POST',
-    contentType: 'application/json',
+    contentType: 'application/json; charset=utf-8',
     data: JSON.stringify({
       'method': method,
       'params': opt_params,
