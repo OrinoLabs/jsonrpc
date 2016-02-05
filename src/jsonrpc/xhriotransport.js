@@ -26,7 +26,7 @@ goog.require('jsonrpc.Transport');
 
 
 /**
- * @param {string} opt_endpointPath
+ * @param {string=} opt_endpointPath
  * @constructor
  * @implements {jsonrpc.Transport}
  */
