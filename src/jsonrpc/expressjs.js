@@ -27,13 +27,13 @@ jsonrpc.expressjs.createHandler = function(dispatcher, opt_logError) {
      * @param {*} result
      */
     function replyWithResult(result) {
-      sendResponse({'result': result});
+      sendResponse({'id': callId, 'result': result});
     }
     /** 
      * @param {jsonrpc.Error} error
      */
     function replyWithError(error) {
-      sendResponse({'error': error});
+      sendResponse({'id': callId, 'error': error});
       opt_logError && opt_logError(httpRequest, httpResponse, error);
     }
 
@@ -58,6 +58,7 @@ jsonrpc.expressjs.createHandler = function(dispatcher, opt_logError) {
 
     var methodName = requestData['method'];
     var params = requestData['params'] || {};
+    var callId = requestData['id'];
 
     if (!methodName) {
       replyWithError(new jsonrpc.Error(jsonrpc.ErrorCode.INVALID_REQUEST));

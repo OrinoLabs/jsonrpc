@@ -49,7 +49,8 @@ jsonrpc.AngularTransport = function() {};
 /**
  * @inheritDoc
  */
-jsonrpc.AngularTransport.prototype.performCall = function(method, opt_params) {
+jsonrpc.AngularTransport.prototype.performCall = function(
+    callId, method, opt_params, opt_opts) {
   var payload = {
     method: method,
     params: opt_params || {}
