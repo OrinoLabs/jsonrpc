@@ -20,6 +20,13 @@ jsonrpc.NodeHttpTransport = function() {};
 
 
 /**
+ * Whether chunking is used for requests.
+ * @type {boolean}
+ */
+jsonrpc.NodeHttpTransport.prototype.chunkedRequests = true;
+
+
+/**
  * @inheritDoc
  */
 jsonrpc.NodeHttpTransport.prototype.performCall = function(method, opt_params, opt_opts) {
@@ -29,7 +36,7 @@ jsonrpc.NodeHttpTransport.prototype.performCall = function(method, opt_params, o
     'method': method,
     'params': opt_params || {}
   };
-  var payload = new Buffer(JSON.stringify(payloadData));
+  var payload = new Buffer(JSON.stringify(payloadData), 'utf-8');
 
   var reqOpts = {
     host: opts.endpoint && opts.endpoint.host || 'localhost',
@@ -37,9 +44,14 @@ jsonrpc.NodeHttpTransport.prototype.performCall = function(method, opt_params, o
     path: opts.endpoint && opts.endpoint.path || jsonrpc.defaultEndpoint.path,
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json; charset=utf-8'
+      'Content-Type': 'application/json; charset=utf-8',
     }
   };
+
+  if (!this.chunkedRequests) {
+    reqOpts.headers['Transfer-Encoding'] = '';
+    reqOpts.headers['Content-Length'] = payload.length;
+  }
 
   return new goog.Promise(function(resolve, reject) {
     var httpRequest = http.request(reqOpts, function(httpResponse) {
