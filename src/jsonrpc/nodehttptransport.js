@@ -50,9 +50,15 @@ jsonrpc.NodeHttpTransport.prototype.performCall = function(
   };
 
   if (!this.chunkedRequests) {
-    reqOpts.headers['Transfer-Encoding'] = '';
+    // Remove Transfer-Encoding. Just setting it to '' or null confuses some
+    // web servers (e.g. Tomcat).
+    delete reqOpts.headers['Transfer-Encoding'];
+    // Set content length.
+    // NOTE: Using the raw buffer length, not the string length (because encoding).
     reqOpts.headers['Content-Length'] = payload.length;
   }
+
+  console.log(reqOpts)
 
   return new goog.Promise(function(resolve, reject) {
     var httpRequest = http.request(reqOpts, function(httpResponse) {
