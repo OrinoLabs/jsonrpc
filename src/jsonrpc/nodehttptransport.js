@@ -58,8 +58,6 @@ jsonrpc.NodeHttpTransport.prototype.performCall = function(
     reqOpts.headers['Content-Length'] = payload.length;
   }
 
-  console.log(reqOpts)
-
   return new goog.Promise(function(resolve, reject) {
     var httpRequest = http.request(reqOpts, function(httpResponse) {
       var responseData = '';
