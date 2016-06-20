@@ -84,11 +84,17 @@ jsonrpc.Dispatcher.prototype.dispatchCall = function(methodName, params) {
     resultPromise
     .then(resolve)
     .then(null, function(err) {
+      console.log('[jsonrpc] ERROR: Promise returned by handler function was rejected: ', err);
       if (err instanceof jsonrpc.Error) {
         reject(err);
       } else {
-        reject(new jsonrpc.Error(
-            jsonrpc.ErrorCode.INTERNAL_ERROR, null, err));
+        // NOTE: JSON.stringify(<Error instance>) just yields {}.
+        // To propagate something useful, use the result of Error#toString()
+        // in that case.
+        if (err instanceof Error && !err.toJSON) {
+          err = err.toString();
+        }
+        reject(new jsonrpc.Error(jsonrpc.ErrorCode.INTERNAL_ERROR, null, err));
       }
     })
   }.bind(this));
