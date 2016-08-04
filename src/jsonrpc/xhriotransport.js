@@ -84,7 +84,7 @@ jsonrpc.JsonRpcIo = function(methodName, path) {
   this.methodName_ = methodName;
 
   /**
-   * @type {Object.<string, (string,number,Object)>}
+   * @type {Object.<string, (string|number|Object)>}
    * @protected
    */
   this.params_ = {};
@@ -189,7 +189,7 @@ jsonrpc.JsonRpcIo.prototype.buildUri_ = function() {
 
 
 /**
- * @return {(undefined|FormData)}
+ * @return {(string|undefined)}
  * @private
  */
 jsonrpc.JsonRpcIo.prototype.buildBody_ = function() {

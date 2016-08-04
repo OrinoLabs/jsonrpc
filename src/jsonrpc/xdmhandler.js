@@ -26,7 +26,7 @@ jsonrpc.XdmHandler = function(link, port) {
 
 
 /**
- * @param {Object} msg
+ * @param {*} msg
  * @private
  */
 jsonrpc.XdmHandler.prototype.handleMessage_ = function(msg) {
