@@ -1,0 +1,24 @@
+{
+  "name": "jsonrpc",
+  "version": "0.1.0",
+  "description": "JSONRPC library",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OrinoLabs/jsonrpc.git"
+  },
+  "author": "Michael Bürge <mib@orino.ch>",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/OrinoLabs/jsonrpc/issues"
+  },
+  "homepage": "https://github.com/OrinoLabs/jsonrpc",
+  "devDependencies": {
+    "closure-library": "^1.43629075.2",
+    "closure-library-phantomjs": "^0.1.1",
+    "gulp": "^3.9.1",
+    "q": "^1.4.1"
+  }
+}
