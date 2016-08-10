@@ -1,8 +1,14 @@
 
 
 var gulp = require('gulp');
+var path = require('path');
 var Q = require('q');
 var spawn = require('child_process').spawn;
+
+
+var CLOSURE_LIB = 'node_modules/closure-library';
+var GOOG_DIR = path.join(CLOSURE_LIB, 'closure/goog');
+
 
 
 /**
@@ -17,6 +23,31 @@ function logWithPrefix(prefix, data) {
       (line) => { process.stdout.write(`[${prefix}] ${line}\n`) } );
 }
 
+
+// ---------- deps ----------
+
+
+gulp.task('writedeps', function() {
+  function rootWithPrefixArg(root) {
+    var rel = path.relative(GOOG_DIR, root);
+    return `--root_with_prefix=${root} ${rel}`;
+  }
+  return Q.Promise((resolve, reject) => {
+    var proc = spawn(
+        'node_modules/closure-library/closure/bin/build/depswriter.py',
+        [ rootWithPrefixArg('src'),
+          '--output_file=deps.js' ]);
+    proc.stdout.on('data', logWithPrefix.bind(null, 'depswriter.py'));
+    proc.stderr.on('data', logWithPrefix.bind(null, 'depswriter.py stderr'));
+    proc.on('exit', (code, signal) => {
+      if (code === 0) resolve()
+      else reject(new Error('depswriter.py failed'));
+    })
+  })
+});
+
+
+// ---------- JsUnit tests ----------
 
 
 function runJsUnitTests() {
