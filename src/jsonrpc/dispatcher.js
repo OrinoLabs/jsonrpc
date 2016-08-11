@@ -4,6 +4,9 @@
 
 goog.provide('jsonrpc.Dispatcher');
 
+goog.require('goog.log');
+goog.require('goog.Promise');
+goog.require('jsonrpc.Error');
 
 
 /**
@@ -21,6 +24,10 @@ jsonrpc.Dispatcher = function() {
    */
   this.handlers_ = {};
 };
+
+
+/** @type {goog.debug.Logger} */
+jsonrpc.Dispatcher.prototype.logger = goog.log.getLogger('jsonrpc.Dispatcher');
 
 
 /**
@@ -60,43 +67,44 @@ jsonrpc.Dispatcher.prototype.dispatchCall = function(methodName, params) {
     }
 
     if (!handler) {
-      console.log('[jsonrpc] No handler for method: ' + methodName);
+      this.logger.severe('No handler for method: ' + methodName);
       reject(new jsonrpc.Error(
-          jsonrpc.ErrorCode.METHOD_NOT_FOUND, null, methodName));
+          jsonrpc.ErrorCode.METHOD_NOT_FOUND, undefined, methodName));
       return;
     }
 
+    var resultPromise;
     try {
       var handlerReturnValue = handler(params);
+      // Did the handler return a promise?
+      if (handlerReturnValue.then) {
+        resultPromise = handlerReturnValue;
+      } else {
+        resultPromise = goog.Promise.resolve(handlerReturnValue);
+      }
     } catch (err) {
-      console.log('[jsonrpc] ERROR: Exception caught executing handler: ', err);
-      reject(new jsonrpc.Error(
-          jsonrpc.ErrorCode.INTERNAL_ERROR, null, err));
-    }
-
-    // Did the handler return a promise?
-    if (handlerReturnValue.then) {
-      var resultPromise = handlerReturnValue;
-    } else {
-      var resultPromise = goog.Promise.resolve(handlerReturnValue);
+      resultPromise = goog.Promise.reject(err);
     }
 
     resultPromise
     .then(resolve)
     .then(null, function(err) {
-      console.log('[jsonrpc] ERROR: Promise returned by handler function was rejected: ', err);
+      var logMsg = 'Call to "' + methodName + '" failed: ' + err;
       if (err instanceof jsonrpc.Error) {
+        this.logger.fine(logMsg);
         reject(err);
       } else {
         // NOTE: JSON.stringify(<Error instance>) just yields {}.
         // To propagate something useful, use the result of Error#toString()
         // in that case.
-        if (err instanceof Error && !err.toJSON) {
-          err = err.toString();
+        if (err instanceof Error && err.stack) {
+          logMsg += '\n' + err.stack;
         }
-        reject(new jsonrpc.Error(jsonrpc.ErrorCode.INTERNAL_ERROR, null, err));
+        this.logger.severe(logMsg);
+        reject(new jsonrpc.Error(
+            jsonrpc.ErrorCode.APPLICATION_ERROR, undefined, err));
       }
-    })
+    }.bind(this))
   }.bind(this));
 };
 
