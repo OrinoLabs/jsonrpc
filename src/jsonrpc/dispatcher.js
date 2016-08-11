@@ -67,7 +67,7 @@ jsonrpc.Dispatcher.prototype.dispatchCall = function(methodName, params) {
     }
 
     if (!handler) {
-      this.logger.severe('No handler for method: ' + methodName);
+      this.logger.severe('No handler for method "' + methodName + '".');
       reject(new jsonrpc.Error(
           jsonrpc.ErrorCode.METHOD_NOT_FOUND, undefined, methodName));
       return;

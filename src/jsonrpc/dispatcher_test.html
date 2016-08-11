@@ -43,6 +43,36 @@ function testEchoAsync() {
 }
 
 
+function testNoSuchHandler() {
+  var dispatcher = new jsonrpc.Dispatcher;
+
+  var logRecord;
+  var logHandler = function(rec) { logRecord = rec; };
+  goog.log.addHandler(dispatcher.logger, logHandler);
+
+  return (
+    dispatcher.dispatchCall('noSuchMethod')
+    .then(function() {
+      // Call succeeded -> fail the test.
+      fail();
+    })
+    .thenCatch(function(err) {
+      assert(err instanceof jsonrpc.Error);
+      assertEquals(jsonrpc.ErrorCode.METHOD_NOT_FOUND, err.code);
+      assertEquals('Method not found.', err.message);
+
+      assert(!!logRecord);
+      assertEquals(goog.debug.Logger.Level.SEVERE, logRecord.getLevel());
+      var logMessage = logRecord.getMessage();
+      assert(!!logMessage.match(/^No handler for method "noSuchMethod"./));
+    })
+    .thenAlways(function() {
+      goog.log.removeHandler(dispatcher.logger, logHandler);
+    })
+  );
+}
+
+
 function testHandlerRuntimeError() {
   var dispatcher = new jsonrpc.Dispatcher;
   dispatcher.addMethod('screwUp', function() {
@@ -79,6 +109,76 @@ function testHandlerRuntimeError() {
   );
 }
 
+
+function testHandlerThrowsError() {
+  var dispatcher = new jsonrpc.Dispatcher;
+  dispatcher.addMethod('throwError', function() {
+    throw new Error('Something fishy happened.');
+  });
+
+  var logRecord;
+  var logHandler = function(rec) { logRecord = rec; };
+  goog.log.addHandler(dispatcher.logger, logHandler);
+
+  return (
+    dispatcher.dispatchCall('throwError')
+    .then(function() {
+      // Call succeeded -> fail the test.
+      fail();
+    })
+    .thenCatch(function(err) {
+      assert(err instanceof jsonrpc.Error);
+      assertEquals(jsonrpc.ErrorCode.APPLICATION_ERROR, err.code);
+      assertEquals('Application error.', err.message);
+
+      assert(!!logRecord);
+      assertEquals(goog.debug.Logger.Level.SEVERE, logRecord.getLevel());
+      var logMessage = logRecord.getMessage();
+      assert(!!logMessage.match(/^Call to "throwError" failed:/));
+      assert(!!logMessage.match(/Something fishy happened./));
+      // Check for stack trace.
+      assert(!!logMessage.match(/dispatcher.js/));
+    })
+    .thenAlways(function() {
+      goog.log.removeHandler(dispatcher.logger, logHandler);
+    })
+  );
+}
+
+
+function testHandlerThrowsJsonRpcError() {
+  var dispatcher = new jsonrpc.Dispatcher;
+  dispatcher.addMethod('throwJsonRpcError', function() {
+    throw new jsonrpc.Error(777, 'Not supposed to get here.');
+  });
+
+  var logRecord;
+  var logHandler = function(rec) { logRecord = rec; };
+  goog.log.addHandler(dispatcher.logger, logHandler);
+  dispatcher.logger.setLevel(goog.debug.Logger.Level.ALL);
+
+  return (
+    dispatcher.dispatchCall('throwJsonRpcError')
+    .then(function() {
+      // Call succeeded -> fail the test.
+      fail();
+    })
+    .thenCatch(function(err) {
+      assert(err instanceof jsonrpc.Error);
+      assertEquals(777, err.code);
+      assertEquals('Not supposed to get here.', err.message);
+
+      assert(!!logRecord);
+      assertEquals(goog.debug.Logger.Level.FINE, logRecord.getLevel());
+      var logMessage = logRecord.getMessage();
+      assert(!!logMessage.match(/^Call to "throwJsonRpcError" failed:/));
+      assert(!!logMessage.match(/Not supposed to get here./));
+    })
+    .thenAlways(function() {
+      goog.log.removeHandler(dispatcher.logger, logHandler);
+    })
+  );
+}
 
 </script>
 </body>

@@ -67,4 +67,10 @@ jsonrpc.Error.fromJson = function(jsonError) {
 };
 
 
+/** @return {string} */
+jsonrpc.Error.prototype.toString = function() {
+  return this.message;
+};
+
+
 
