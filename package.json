@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "JSONRPC library",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp run-jsunit-tests"
   },
   "repository": {
     "type": "git",
@@ -16,8 +16,8 @@
   },
   "homepage": "https://github.com/OrinoLabs/jsonrpc",
   "devDependencies": {
-    "closure-library": "^1.43629075.2",
     "closure-library-phantomjs": "^0.1.1",
+    "google-closure-library": "^20160713.0.0",
     "gulp": "^3.9.1",
     "q": "^1.4.1"
   }

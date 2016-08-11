@@ -6,7 +6,7 @@ var Q = require('q');
 var spawn = require('child_process').spawn;
 
 
-var CLOSURE_LIB = 'node_modules/closure-library';
+var CLOSURE_LIB = 'node_modules/google-closure-library';
 var GOOG_DIR = path.join(CLOSURE_LIB, 'closure/goog');
 
 
@@ -34,7 +34,7 @@ gulp.task('writedeps', function() {
   }
   return Q.Promise((resolve, reject) => {
     var proc = spawn(
-        'node_modules/closure-library/closure/bin/build/depswriter.py',
+        CLOSURE_LIB + '/closure/bin/build/depswriter.py',
         [ rootWithPrefixArg('src'),
           '--output_file=deps.js' ]);
     proc.stdout.on('data', logWithPrefix.bind(null, 'depswriter.py'));
