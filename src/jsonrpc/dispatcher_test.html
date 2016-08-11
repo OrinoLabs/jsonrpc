@@ -1,16 +1,84 @@
 <!doctype html>
 <html>
 <body>
-<script src="../../node_modules/closure-library/closure/goog/base.js"></script>
-<!-- <script src="../../deps.js"></script> -->
+<script src="../../node_modules/google-closure-library/closure/goog/base.js"></script>
+<script src="../../deps.js"></script>
 <script>
+goog.require('goog.Promise');
 goog.require('goog.testing.jsunit');
+goog.require('jsonrpc.Dispatcher');
+goog.require('jsonrpc.Error');
 </script>
 <script>
 
-function testDummy() {
-  assertEquals(true, true);
+function testEchoSync() {
+  var dispatcher = new jsonrpc.Dispatcher;
+  dispatcher.addMethod('echo', function(params) {
+    return params;
+  });
+
+  return (
+    dispatcher.dispatchCall('echo', {'gna': 'fu'})
+    .then(function(result) {
+      assertObjectEquals({'gna': 'fu'}, result);
+    })
+  );
 }
+
+
+function testEchoAsync() {
+  var dispatcher = new jsonrpc.Dispatcher;
+  dispatcher.addMethod('echo', function(params) {
+    return new goog.Promise(function(resolve, reject) {
+      window.setTimeout(function() { resolve(params) }, 10);
+    });
+  });
+
+  return (
+    dispatcher.dispatchCall('echo', {'gna': 'fu'})
+    .then(function(result) {
+      assertObjectEquals({'gna': 'fu'}, result);
+    })
+  );
+}
+
+
+function testHandlerRuntimeError() {
+  var dispatcher = new jsonrpc.Dispatcher;
+  dispatcher.addMethod('screwUp', function() {
+    // Trigger error by attempting to access property on null.
+    var nullObject = null;
+    return nullObject.someProperty;
+  });
+
+  var logRecord;
+  var logHandler = function(rec) { logRecord = rec; };
+  goog.log.addHandler(dispatcher.logger, logHandler);
+
+  return (
+    dispatcher.dispatchCall('screwUp')
+    .then(function() {
+      // Call succeeded -> fail the test.
+      fail();
+    })
+    .thenCatch(function(err) {
+      assert(err instanceof jsonrpc.Error);
+      assertEquals(jsonrpc.ErrorCode.APPLICATION_ERROR, err.code);
+      assertEquals('Application error.', err.message);
+
+      assert(!!logRecord);
+      assertEquals(goog.debug.Logger.Level.SEVERE, logRecord.getLevel());
+      var logMessage = logRecord.getMessage();
+      assert(!!logMessage.match(/^Call to "screwUp" failed:/));
+      // Check for stack trace.
+      assert(!!logMessage.match(/dispatcher.js/));
+    })
+    .thenAlways(function() {
+      goog.log.removeHandler(dispatcher.logger, logHandler);
+    })
+  );
+}
+
 
 </script>
 </body>
