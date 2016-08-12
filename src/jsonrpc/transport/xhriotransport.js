@@ -3,11 +3,6 @@
 
 /**
  * @fileoverview Perform JSON-RPC calls using goog.net.XhrIo.
- *
- * NOTE:
- * Differs from the JSON-RPC spec in that data is sent as form data,
- * not directly as JSON in the HTTP body.
- * TODO: Change this.
  */
 
 
