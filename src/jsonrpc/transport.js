@@ -5,6 +5,9 @@
 goog.provide('jsonrpc.Transport');
 
 
+// TODO: Add typing for promise result .
+
+
 /**
  * @interface
  */
