@@ -67,6 +67,18 @@ jsonrpc.Error.fromJson = function(jsonError) {
 };
 
 
+/**
+ * NOTE: No need actually do something. The JSON.stringify() handles
+ * jsonrpc.Error-instances just fine.
+ * This is left here to illustrate that jsonrpc.Error-instances end up being
+ * passed JSON.stringify().
+ * @return {!Object}
+ */
+jsonrpc.Error.prototype.toJSON = function() {
+  return this;
+};
+
+
 /** @return {string} */
 jsonrpc.Error.prototype.toString = function() {
   return this.message;
