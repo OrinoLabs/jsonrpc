@@ -180,6 +180,30 @@ function testHandlerThrowsJsonRpcError() {
   );
 }
 
+
+function testCatchAllHandler() {
+  var dispatcher = new jsonrpc.Dispatcher;
+  dispatcher.setCatchAllHandler(function(method, params) {
+    return 'catchAll-handler: ' + method;
+  });
+
+  function performTestCall(method) {
+    return (
+      dispatcher.dispatchCall(method, {})
+      .then(function(result) {
+        assertEquals('catchAll-handler: ' + method, result);
+      })
+    );
+  }
+
+  return goog.Promise.all([
+    performTestCall('getCoffee'),
+    performTestCall('addMilk'),
+  ]);
+}
+
+
+
 </script>
 </body>
 </html>
