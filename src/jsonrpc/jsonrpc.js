@@ -14,19 +14,10 @@ goog.require('goog.Promise');
 goog.require('jsonrpc.Error');
 
 
-/**
- * @typedef {{
- *   host: (string|undefined),
- *   port: (number|undefined),
- *   path: (string|undefined)
- * }}
- */
-jsonrpc.Endpoint;
-
 
 /**
  * @typedef {{
- *   endpoint: (undefined|jsonrpc.Endpoint),
+ *   endpoint: (undefined|jsonrpc.HttpEndpoint),
  *   maxAttempts: (undefined|number),
  *   shouldRetry: (undefined|function(jsonrpc.Error):boolean),
  *   callId: (undefined|string)
@@ -39,16 +30,6 @@ jsonrpc.CallOptions;
  * @type {jsonrpc.Transport}
  */
 jsonrpc.defaultTransport;
-
-
-/**
- * @type {jsonrpc.Endpoint}
- */
-jsonrpc.defaultEndpoint = {
-  host: undefined,
-  port: undefined,
-  path: '/jsonrpc'
-};
 
 
 /**
