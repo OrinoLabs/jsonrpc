@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<body>
+<script src="../../../node_modules/google-closure-library/closure/goog/base.js"></script>
+<script src="../../../deps.js"></script>
+<script>
+goog.require('goog.Promise');
+goog.require('goog.testing.jsunit');
+goog.require('jsonrpc.Client');
+goog.require('jsonrpc.XhrIoTransport')
+</script>
+<script>
+
+function testEcho() {
+  var client = new jsonrpc.Client(new jsonrpc.XhrIoTransport('/jsonrpc'));
+  return (
+    client.call('echo', {'gna': 'fu'})
+    .then(function(result) {
+      assertObjectEquals({'gna': 'fu'}, result);
+    })
+  );
+}
+
+</script>
+</body>
+</html>
