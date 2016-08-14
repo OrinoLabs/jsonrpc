@@ -2,7 +2,7 @@
 // All rights reserved.
 
 
-goog.provide('jsonrpc.expressjs');
+goog.provide('jsonrpc.serve.express');
 
 
 /**
@@ -10,7 +10,7 @@ goog.provide('jsonrpc.expressjs');
  * @param {function(express.Request, express.Response, jsonrpc.Error)=} opt_logError
  * @return {function(express.Request, express.Response)}
  */
-jsonrpc.expressjs.createHandler = function(dispatcher, opt_logError) {
+jsonrpc.serve.express.createHandler = function(dispatcher, opt_logError) {
   
   /**
    * @param {express.Request} request

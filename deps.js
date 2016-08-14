@@ -3,8 +3,8 @@
 goog.addDependency('../../../../src/jsonrpc/client.js', ['jsonrpc.Client'], ['goog.Promise', 'jsonrpc'], false);
 goog.addDependency('../../../../src/jsonrpc/dispatcher.js', ['jsonrpc.Dispatcher'], ['goog.Promise', 'goog.log', 'jsonrpc.Error'], false);
 goog.addDependency('../../../../src/jsonrpc/error.js', ['jsonrpc.Error', 'jsonrpc.ErrorCode'], [], false);
-goog.addDependency('../../../../src/jsonrpc/expressjs.js', ['jsonrpc.expressjs'], [], false);
 goog.addDependency('../../../../src/jsonrpc/jsonrpc.js', ['jsonrpc'], ['goog.Promise', 'jsonrpc.Error'], false);
+goog.addDependency('../../../../src/jsonrpc/serve/express.js', ['jsonrpc.serve.express'], [], false);
 goog.addDependency('../../../../src/jsonrpc/transport.js', ['jsonrpc.Transport'], [], false);
 goog.addDependency('../../../../src/jsonrpc/transport/angulartransport.js', ['jsonrpc.AngularTransport'], ['jsonrpc.Transport'], false);
 goog.addDependency('../../../../src/jsonrpc/transport/httpendpoint.js', ['jsonrpc.HttpEndpoint'], [], false);
