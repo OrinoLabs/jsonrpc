@@ -11,6 +11,12 @@ goog.require('jsonrpc.XhrIoTransport')
 </script>
 <script>
 
+// NOTE:
+// The tests in this file perform real calls through XHR an are meant to be run
+// through/against testing/express-server.js.
+// They WON'T work when loaded as file-URL.
+
+
 function testEcho() {
   var client = new jsonrpc.Client(new jsonrpc.XhrIoTransport('/jsonrpc'));
   return (

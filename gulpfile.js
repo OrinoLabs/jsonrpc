@@ -50,6 +50,45 @@ gulp.task('writedeps', function() {
 // ---------- JsUnit tests ----------
 
 
+
+/**
+ * @param {child_process.ChildProcess}
+ * @return {Promise}
+ */
+function killProcess(proc) {
+  if (!proc) return Q();
+
+  var timers = [];
+  return Q.Promise((resolve, reject, notify) => {
+      proc.on('exit', resolve);
+      proc.on('error', reject);
+      proc.kill('SIGTERM');
+
+      // Kill it some more after a while.
+      timers.push(setTimeout(
+          () => {
+            console.log('Send SIGKILL.')
+            proc.kill('SIGKILL');
+          },
+          10000));
+      // Give it some more time, then just reject the promise.
+      timers.push(setTimeout(() => reject(), 15000));
+    })
+    .finally(() => timers.forEach(clearTimeout));
+}
+
+
+
+function withExpressServer(fn) {
+  var proc = spawn('node', ['testing/express-server.js']);
+  fn()
+  .then(function() {
+    proc.kill('SIGTERM');
+  });
+}
+
+
+
 function runJsUnitTests() {
   var resolver = Q.defer();
 
@@ -58,7 +97,7 @@ function runJsUnitTests() {
   var proc = spawn(
       'node_modules/closure-library-phantomjs/bin/closure-library-phantomjs',
       [ '-r', 'tap',  // Output format.
-        'all_tests.html' ]);
+        'http://localhost:9090/all_tests.html' ]);
 
   proc.stdout.on('data', (data) => {
     logWithPrefix('runner stdout', data);
@@ -82,7 +121,10 @@ function runJsUnitTests() {
   return resolver.promise;
 }
 
-gulp.task('run-jsunit-tests', runJsUnitTests);
+
+gulp.task('run-jsunit-tests', function() {
+  return withExpressServer(runJsUnitTests);
+});
 
 
 
