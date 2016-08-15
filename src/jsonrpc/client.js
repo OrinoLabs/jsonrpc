@@ -72,7 +72,6 @@ jsonrpc.Client.prototype.call = function(method, opt_params, opt_opts) {
 
 
 /**
- * @param {jsonrpc.Transport} transport
  * @param {string} method
  * @param {Object=} opt_params
  * @param {jsonrpc.CallOptions=} opt_opts

@@ -50,8 +50,8 @@ jsonrpc.Error = function(code, opt_msg, opt_data) {
   /** @type {number} */
   this.code = code;
 
-  /** @type {(string|undefined)} */
-  this.message = opt_msg || jsonrpc.errorMessages[code];
+  /** @type {string} */
+  this.message = opt_msg || jsonrpc.errorMessages[code] || '';
 
   /** @type {*} */
   this.data = opt_data;
@@ -68,7 +68,7 @@ jsonrpc.Error.fromJson = function(jsonError) {
 
 
 /**
- * NOTE: No need actually do something. The JSON.stringify() handles
+ * NOTE: No need to actually do something. The JSON.stringify() handles
  * jsonrpc.Error-instances just fine.
  * This is left here to illustrate that jsonrpc.Error-instances end up being
  * passed JSON.stringify().

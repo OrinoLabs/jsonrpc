@@ -26,7 +26,7 @@ jsonrpc.CallOptions;
 /**
  * @type {jsonrpc.Client}
  */
-jsonrpc.defaultClient;
+jsonrpc.defaultClient = null;
 
 
 /**
