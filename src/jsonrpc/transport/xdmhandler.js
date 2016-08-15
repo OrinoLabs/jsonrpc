@@ -6,9 +6,10 @@ goog.provide('jsonrpc.XdmHandler');
 /**
  * @param {xdm.Link} link
  * @param {string} port
+ * @param {jsonrpc.Client} jsonrpcClient
  * @constructor
  */
-jsonrpc.XdmHandler = function(link, port) {
+jsonrpc.XdmHandler = function(link, port, jsonrpcClient) {
   /**
    * @type {xdm.Link}
    * @private
@@ -20,6 +21,12 @@ jsonrpc.XdmHandler = function(link, port) {
    * @private
    */
   this.port_ = port;
+
+  /**
+   * @type {jsonrpc.Client}
+   * @private
+   */
+  this.jsonrpcClient_ = jsonrpcClient
 
   this.link_.addPort(this.port_, this.handleMessage_.bind(this));
 };
@@ -35,7 +42,7 @@ jsonrpc.XdmHandler.prototype.handleMessage_ = function(msg) {
   var params = msg['params'];
   var opts = msg['opts'];
 
-  jsonrpc.call(method, params, opts)
+  this.jsonrpcClient_.call(method, params, opts)
   .then(function(result) {
     this.link_.send(this.port_, {'id': callId, 'result': result});
   }.bind(this))
