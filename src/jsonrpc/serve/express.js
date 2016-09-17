@@ -18,24 +18,22 @@ jsonrpc.serve.express.createHandler = function(dispatcher, opt_logError) {
    */
   var handlerFunction = function(httpRequest, httpResponse) {
 
+    /** @param {Object} jsonrpcResponse */
     function sendResponse(jsonrpcResponse) {
       httpResponse.setHeader('Content-Type', 'application/json; charset=utf-8');
       httpResponse.write(JSON.stringify(jsonrpcResponse));
       httpResponse.end();
     }
-    /**
-     * @param {*} result
-     */
+    /** @param {*} result */
     function replyWithResult(result) {
       sendResponse({'id': callId, 'result': result});
     }
-    /** 
-     * @param {jsonrpc.Error} error
-     */
+    /** @param {jsonrpc.Error} error */
     function replyWithError(error) {
       sendResponse({'id': callId, 'error': error});
       opt_logError && opt_logError(httpRequest, httpResponse, error);
     }
+
 
     var requestData = httpRequest.body;
 
