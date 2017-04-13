@@ -1,13 +1,13 @@
 // Copyright 2015 Michael Bürge. All rights reserved.
 
 
-goog.provide('jsonrpc.AngularTransport');
+goog.provide('jsonrpc.AngularJSTransport');
 
 goog.require('jsonrpc.Transport');
 
 
 // NOTE/TODO:
-// The main motivation (besides reducing JS size) for jsonrpc.AngularTransport
+// The main motivation (besides reducing JS size) for jsonrpc.AngularJSTransport
 // was to integrate with the Angular digest loop to avoid having to call
 // $scope.$apply() after requests complete.
 // The current form doens't achieve this for some reason, despite the fact that
@@ -43,13 +43,13 @@ jsonrpc.ngModule.run(jsonrpc.acquireHttpService_);
  * @constructor
  * @implements {jsonrpc.Transport}
  */
-jsonrpc.AngularTransport = function() {};
+jsonrpc.AngularJSTransport = function() {};
 
 
 /**
  * @inheritDoc
  */
-jsonrpc.AngularTransport.prototype.performCall = function(
+jsonrpc.AngularJSTransport.prototype.performCall = function(
     callId, method, opt_params, opt_opts) {
   var payload = {
     method: method,
