@@ -19,7 +19,7 @@ jsonrpc.Transport = function() {};
  * @param {string} method
  * @param {Object=} opt_params
  * @param {jsonrpc.CallOptions=} opt_opts
- * @return {goog.Promise<!Object>}
+ * @return {goog.Promise<!Object>} The JSONRPC response object.
  */
 jsonrpc.Transport.prototype.performCall = goog.abstractMethod;
 

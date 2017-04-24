@@ -9,6 +9,12 @@ var spawn = require('child_process').spawn;
 var CLOSURE_LIB = 'node_modules/google-closure-library';
 var GOOG_DIR = path.join(CLOSURE_LIB, 'closure/goog');
 
+var CLOSURE_COMPILER = 'node_modules/google-closure-compiler/compiler.jar';
+
+
+// TODO: Maybe get rid of Q?
+// Check which node version introduced native support for promises.
+
 
 
 /**
@@ -42,8 +48,31 @@ gulp.task('writedeps', function() {
     proc.on('exit', (code, signal) => {
       if (code === 0) resolve()
       else reject(new Error('depswriter.py failed'));
-    })
-  })
+    });
+  });
+});
+
+
+// ---------- jsonrpc-ng ----------
+
+
+gulp.task('angular', function() {
+  return Q.Promise((resolve, reject) => {
+    var proc = spawn(
+        'java',
+        [ '-jar', CLOSURE_COMPILER,
+          `--js=src/**.js`,
+          `--js=${GOOG_DIR}`,
+          `--dependency_mode=STRICT`,
+          `--entry_point=angularjsonrpc`,
+          `--js_output_file=angularjsonrpc.js` ]);
+    proc.stdout.on('data', logWithPrefix.bind(null, 'closure-compiler'));
+    proc.stderr.on('data', logWithPrefix.bind(null, 'closure-compiler'));
+    proc.on('exit', (code, signal) => {
+      if (code == 0) resolve();
+      else reject(new Error('closure-compiler failed'));
+    });
+  });
 });
 
 

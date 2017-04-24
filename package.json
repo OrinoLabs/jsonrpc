@@ -19,6 +19,7 @@
     "body-parser": "^1.15.2",
     "closure-library-phantomjs": "^0.1.1",
     "express": "^4.14.0",
+    "google-closure-compiler": "^20170409.0.0",
     "google-closure-library": "^20160713.0.0",
     "gulp": "^3.9.1",
     "q": "^1.4.1"
