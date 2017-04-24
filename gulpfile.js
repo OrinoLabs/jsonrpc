@@ -61,11 +61,13 @@ gulp.task('angular', function() {
     var proc = spawn(
         'java',
         [ '-jar', CLOSURE_COMPILER,
-          `--js=src/**.js`,
-          `--js=${GOOG_DIR}`,
-          `--dependency_mode=STRICT`,
-          `--entry_point=angularjsonrpc`,
-          `--js_output_file=angularjsonrpc.js` ]);
+          `--js`, `src/**.js`,
+          `--js`, `${GOOG_DIR}`,
+          `--dependency_mode`, `STRICT`,
+          // IIFE: Immediately invoked function expression
+          `--isolation_mode`, `IIFE`,
+          `--entry_point`, `angularjsonrpc`,
+          `--js_output_file`, `dist/angularjsonrpc.js` ]);
     proc.stdout.on('data', logWithPrefix.bind(null, 'closure-compiler'));
     proc.stderr.on('data', logWithPrefix.bind(null, 'closure-compiler'));
     proc.on('exit', (code, signal) => {
