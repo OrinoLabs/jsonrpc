@@ -3,6 +3,8 @@
 goog.provide('jsonrpc.AngularTransport');
 
 goog.require('jsonrpc.Transport');
+goog.require('jsonrpc.Error');
+goog.require('jsonrpc.ErrorCode');
 
 
 // TODO: Figure out how to properly get access to the Headers constructor.
@@ -10,7 +12,8 @@ goog.require('jsonrpc.Transport');
 
 
 /**
- * @param {Http} ngHttp
+ * @param {Function} ngHttp
+ * @param {Function} ngHeaderCtor
  * @param {string=} opt_endpointPath
  * @constructor
  * @implements {jsonrpc.Transport}
@@ -50,11 +53,17 @@ jsonrpc.AngularTransport.prototype.performCall = function(callId, method, params
     this.ngHttp_
       .post(this.endpointPath_, body, opts)
       .subscribe(
+        /** function(Response) */
         (res) => {
           var jsonrpcResult = res.json();
           resolve(jsonrpcResult);
         },
-        (err) => reject(e));
+        /** function(Response) */
+        (err) => {
+          var rpcErr = new jsonrpc.Error(
+              jsonrpc.ErrorCode.TRANSPORT_ERROR, undefined, err);
+          reject(rpcErr);
+        });
 
   }.bind(this));
 };
