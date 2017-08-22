@@ -12,6 +12,14 @@ goog.require('jsonrpc.Error');
 
 
 
+// All browsers implement Promise#catch nowadays.
+// Ensure goog.Promise also has it.
+if (!goog.Promise.prototype.catch) {
+  goog.Promise.prototype.catch = goog.Promise.prototype.thenCatch;
+}
+
+
+
 /**
  * @typedef {{
  *   endpoint: (undefined|jsonrpc.HttpEndpoint),
