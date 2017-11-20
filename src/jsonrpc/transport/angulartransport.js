@@ -7,29 +7,29 @@ goog.require('jsonrpc.Error');
 goog.require('jsonrpc.ErrorCode');
 
 
-// TODO: Figure out how to properly get access to the Headers constructor.
+// TODO: Figure out how to properly get access to the HttpHeaders constructor.
 // Currently expecting it to be passed in to the constructor, which is a hack.
 
 
 /**
- * @param {Function} ngHttp
- * @param {Function} ngHeaderCtor
+ * @param {Function} ngHttpClient
+ * @param {Function} ngHttpHeadersCtor
  * @param {string=} opt_endpointPath
  * @constructor
  * @implements {jsonrpc.Transport}
  */
-jsonrpc.AngularTransport = function(ngHttp, ngHeadersCtor, opt_endpointPath) {
+jsonrpc.AngularTransport = function(ngHttpClient, ngHttpHeadersCtor, opt_endpointPath) {
   /**
    * @type {Http}
    * @private
    */
-  this.ngHttp_ = ngHttp;
+  this.ngHttpClient_ = ngHttpClient;
 
   /**
    * @type {function(): Headers}
    * @private
    */
-  this.ngHeadersCtor_ = ngHeadersCtor;
+  this.ngHttpHeadersCtor_ = ngHttpHeadersCtor;
 
   /**
    * @type {string}
@@ -44,19 +44,19 @@ jsonrpc.AngularTransport.prototype.performCall = function(callId, method, params
   return new Promise(function(resolve, reject) {
     var body = JSON.stringify(
         {'id': callId, 'method': method, 'params': params});
-    var headers = new this.ngHeadersCtor_;
-    headers.set('Content-Type', 'application/json; charset=utf-8');
+    var headers = new this.ngHttpHeadersCtor_();
+    headers = headers.set('Content-Type', 'application/json; charset=utf-8');
     /** @type {RequestOptionsArgs} */
     var opts = {
       'headers': headers,
+      'observe': 'response',
     };
-    this.ngHttp_
+    this.ngHttpClient_
       .post(this.endpointPath_, body, opts)
       .subscribe(
         /** function(Response) */
         (res) => {
-          var jsonrpcResult = res.json();
-          resolve(jsonrpcResult);
+          resolve(res.body);
         },
         /** function(Response) */
         (err) => {
