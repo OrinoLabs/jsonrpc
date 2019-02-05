@@ -5,7 +5,7 @@ import { Transport } from './transport.js';
 
 export interface CallOptions {
   maxAttempts?: number;
-  shouldRetry?: (JsonRpcError) => boolean;
+  shouldRetry?: (error: JsonRpcError) => boolean;
 }
 
 
