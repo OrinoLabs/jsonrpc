@@ -3,24 +3,40 @@ import { CallOptions } from './client.js';
 import { Transport } from './transport.js';
 
 
+export interface FetchTransportOptions {
+  url?: string;
+}
+
+
+const defaultOpts: FetchTransportOptions = {
+  url: '/jsonrpc',
+}
+
+
 export class FetchTransport implements Transport {
 
-  constructor() {}
+  private opts: FetchTransportOptions;
+
+
+  constructor(opts?: FetchTransportOptions) {
+    this.opts = Object.assign({}, defaultOpts, opts);
+  }
+
 
   performCall(
-      callId: string,
-      method: string,
-      params: object)
-      : Promise<object>
-  {
-    let bodyData = {
+    callId: string,
+    method: string,
+    params: object
+  ): Promise<object> {
+
+    const bodyData = {
       id: callId,
       method: method,
       params: params,
     };
 
     return window.fetch(
-        '/jsonrpc',
+        this.opts.url,
         {
           method: 'POST',
           headers: {
