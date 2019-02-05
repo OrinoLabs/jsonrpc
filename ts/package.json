@@ -1,6 +1,6 @@
 {
   "name": "ts",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "",
   "scripts": {
     "tsc-es6": "tsc --project tsconfig.es6.json",
