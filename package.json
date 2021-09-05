@@ -1,27 +1,17 @@
 {
   "name": "jsonrpc",
-  "version": "0.2.0",
+  "version": "0.5.0",
+  "license": "MIT",
   "description": "JSONRPC library",
-  "scripts": {
-    "test": "gulp run-jsunit-tests"
-  },
+  "author": "Michael Bürge <mib@orino.ch>",
   "repository": {
     "type": "git",
     "url": "https://github.com/OrinoLabs/jsonrpc.git"
   },
-  "author": "Michael Bürge <mib@orino.ch>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/OrinoLabs/jsonrpc/issues"
   },
+  "scripts": {},
   "homepage": "https://github.com/OrinoLabs/jsonrpc",
-  "devDependencies": {
-    "body-parser": "^1.15.2",
-    "closure-library-phantomjs": "^0.1.1",
-    "express": "^4.14.0",
-    "google-closure-compiler": "^20170409.0.0",
-    "google-closure-library": "^20160713.0.0",
-    "gulp": "^3.9.1",
-    "q": "^1.4.1"
-  }
+  "devDependencies": {}
 }
