@@ -10,7 +10,7 @@
     "url": "https://github.com/OrinoLabs/jsonrpc.git"
   },
   "author": "Michael Bürge <mib@orino.ch>",
-  "license": "",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/OrinoLabs/jsonrpc/issues"
   },
