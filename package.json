@@ -1,6 +1,6 @@
 {
   "name": "jsonrpc",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "license": "MIT",
   "description": "JSONRPC library",
   "author": "Michael Bürge <mib@orino.ch>",
