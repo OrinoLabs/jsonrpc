@@ -35,7 +35,7 @@ export class Dispatcher {
       var handler = this.handlers[methodName];
 
       if (!handler && this.catchAllHandler) {
-        handler = () => this.catchAllHandler(methodName, params);
+        handler = () => this.catchAllHandler!(methodName, params);
       }
 
       if (!handler) {

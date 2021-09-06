@@ -2,11 +2,12 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "CommonJS",
+    "strict": true,
     "rootDir": "src",
     "lib": ["DOM", "ES6"],
     "outDir": "dist/cjs",
   },
   "include": [
-    "src/*.ts",
-  ]
+    "src/**/*.ts"
+  ],
 }

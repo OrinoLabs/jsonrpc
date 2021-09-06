@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Dispatcher = void 0;
 const jsonrpcerror_js_1 = require("./jsonrpcerror.js");
 class Dispatcher {
     constructor() {

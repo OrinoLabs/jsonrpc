@@ -30,7 +30,7 @@ export class Client {
   }
 
 
-  public call(method: string, params?: object, opts?: CallOptions): Promise<object> {
+  public call(method: string, params?: object, opts: CallOptions = {}): Promise<object> {
     if (!opts) opts = {};
 
     let maxAttempts = opts.maxAttempts || 1;
@@ -58,17 +58,19 @@ export class Client {
   }
 
 
+  // TODO: Introduce JSON RPC result object type.
   private performCall(
-      method: string, params?: object, opts?: CallOptions): Promise<object> {
+    method: string, params?: object, opts?: CallOptions
+  ): Promise<any> {
 
     // var callId = (opt_opts && opt_opts.callId) || jsonrpc.Client.generateCallId();
     const callId = this.generateCallId(); 
     if (!params) params = {};
 
     return this.transport.performCall(callId, method, params)
-      .then((response: object) => {
-        var result = response['result'];
-        var error = response['error'];
+      .then((response: any) => {
+        var result = response.result;
+        var error = response.error;
         if (result) {
           return Promise.resolve(result);
 

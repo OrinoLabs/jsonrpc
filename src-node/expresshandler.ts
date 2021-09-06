@@ -1,8 +1,8 @@
 
 import { Request, Response } from 'express';
 
-import { Dispatcher } from './dispatcher';
-import { JsonRpcError, ErrorCode } from './jsonrpcerror';
+import { Dispatcher } from '../dispatcher';
+import { JsonRpcError, ErrorCode } from '../jsonrpcerror';
 
 
 type ExpressHandler = (req: Request, res: Response) => void;

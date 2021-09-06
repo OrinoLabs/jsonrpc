@@ -1,8 +1,7 @@
 "use strict";
-// Copyright 2015 Michael Bürge <mib@orino.ch>
-// All rights reserved.
 Object.defineProperty(exports, "__esModule", { value: true });
-const jsonrpcerror_1 = require("./jsonrpcerror");
+exports.createHandler = void 0;
+const jsonrpcerror_1 = require("../jsonrpcerror");
 function createHandler(dispatcher, logError) {
     return function (httpRequest, httpResponse) {
         function sendResponse(jsonrpcResponse) {

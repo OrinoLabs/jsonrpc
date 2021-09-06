@@ -1,12 +1,17 @@
+const defaultOpts = {
+    url: '/jsonrpc',
+};
 export class FetchTransport {
-    constructor() { }
+    constructor(opts) {
+        this.opts = Object.assign({}, defaultOpts, opts);
+    }
     performCall(callId, method, params) {
-        let bodyData = {
+        const bodyData = {
             id: callId,
             method: method,
             params: params,
         };
-        return window.fetch('/jsonrpc', {
+        return window.fetch(this.opts.url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',

@@ -31,6 +31,12 @@ let errorMessages: {[key:string]: string} = {
 }
 
 
+interface ErrorJson {
+  code: number;
+  message?: string;
+  data?: any;
+}
+
 
 export class JsonRpcError {
 
@@ -46,9 +52,9 @@ export class JsonRpcError {
   }
 
 
-  static fromJson(jsonError: object): JsonRpcError {
+  static fromJson(jsonError: ErrorJson): JsonRpcError {
     return new JsonRpcError(
-        jsonError['code'], jsonError['message'], jsonError['data']);
+        jsonError.code, jsonError.message, jsonError.data);
   }
 
 

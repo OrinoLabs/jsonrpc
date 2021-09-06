@@ -9,7 +9,7 @@ export class Client {
         this.callCount++;
         return this.callIdPrefix + this.callCount;
     }
-    call(method, params, opts) {
+    call(method, params, opts = {}) {
         if (!opts)
             opts = {};
         let maxAttempts = opts.maxAttempts || 1;
@@ -34,6 +34,7 @@ export class Client {
             attemptCall();
         });
     }
+    // TODO: Introduce JSON RPC result object type.
     performCall(method, params, opts) {
         // var callId = (opt_opts && opt_opts.callId) || jsonrpc.Client.generateCallId();
         const callId = this.generateCallId();
@@ -41,8 +42,8 @@ export class Client {
             params = {};
         return this.transport.performCall(callId, method, params)
             .then((response) => {
-            var result = response['result'];
-            var error = response['error'];
+            var result = response.result;
+            var error = response.error;
             if (result) {
                 return Promise.resolve(result);
             }

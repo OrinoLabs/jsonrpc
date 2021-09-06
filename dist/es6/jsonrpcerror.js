@@ -30,7 +30,7 @@ export class JsonRpcError {
         this.data = data;
     }
     static fromJson(jsonError) {
-        return new JsonRpcError(jsonError['code'], jsonError['message'], jsonError['data']);
+        return new JsonRpcError(jsonError.code, jsonError.message, jsonError.data);
     }
     /**
      * NOTE: No need to actually do something. The JSON.stringify() handles

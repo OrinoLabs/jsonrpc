@@ -3,6 +3,7 @@
 // Possibly useful:
 // https://www.npmjs.com/package/ts-error
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonRpcError = exports.ErrorCode = void 0;
 /**
  * http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
  */
@@ -32,7 +33,7 @@ class JsonRpcError {
         this.data = data;
     }
     static fromJson(jsonError) {
-        return new JsonRpcError(jsonError['code'], jsonError['message'], jsonError['data']);
+        return new JsonRpcError(jsonError.code, jsonError.message, jsonError.data);
     }
     /**
      * NOTE: No need to actually do something. The JSON.stringify() handles

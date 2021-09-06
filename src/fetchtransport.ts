@@ -36,7 +36,7 @@ export class FetchTransport implements Transport {
     };
 
     return window.fetch(
-        this.opts.url,
+        this.opts.url!,
         {
           method: 'POST',
           headers: {
